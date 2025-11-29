@@ -1,34 +1,65 @@
-# 🃏 Application de Gestion de Parties de Tarot<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🃏 Gestion de Parties de Tarot# 🃏 Application de Gestion de Parties de Tarot<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 
 
-Application web pour gérer vos parties de tarot et suivre le classement des joueurs.<p align="center">
+Application web pour gérer vos parties de tarot et suivre le classement.
 
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
 
-## 🎯 Fonctionnalités<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
 
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+## InstallationApplication web pour gérer vos parties de tarot et suivre le classement des joueurs.<p align="center">
+
+
+
+```bash<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+
+composer install
+
+npm install && npm run build## 🎯 Fonctionnalités<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+
+cp .env.example .env
+
+php artisan key:generate<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+
+```
 
 - 📊 **Classement ELO** des joueurs<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 
+Configurez MySQL dans `.env`, puis :
+
 - 🎴 **Enregistrement des parties** (4 ou 5 joueurs)</p>
 
-- 📈 **Historique détaillé** de toutes les parties
+```bash
 
-- 🏆 **Calcul automatique des scores** selon les règles officielles du tarot## About Laravel
+php artisan migrate- 📈 **Historique détaillé** de toutes les parties
+
+php artisan db:seed
+
+php artisan serve- 🏆 **Calcul automatique des scores** selon les règles officielles du tarot## About Laravel
+
+```
 
 - 💀 **Gestion des bonus** : petit au bout, poignées, chelem, misères
 
+Accédez à http://localhost:8000
+
 - 🔄 **Rejouer avec les mêmes joueurs** en un clicLaravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+
+## Connexion
 
 - ⚙️ **Administration** pour gérer les comptes utilisateurs
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
+Email : `alice@tarot.test`  
 
-## 🚀 Installation- [Powerful dependency injection container](https://laravel.com/docs/container).
+Mot de passe : `password`- [Simple, fast routing engine](https://laravel.com/docs/routing).
 
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+
+
+---## 🚀 Installation- [Powerful dependency injection container](https://laravel.com/docs/container).
+
+
+
+Bon jeu ! 🎴- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+
 
 ### Prérequis- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
 
