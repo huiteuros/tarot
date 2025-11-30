@@ -33,4 +33,9 @@ Route::middleware('auth')->group(function () {
 // Route publique pour le classement
 Route::get('/leaderboard', [GameController::class, 'leaderboard'])->name('games.leaderboard');
 
+// Route publique pour les règles du jeu
+Route::get('/regles', function () {
+    return view('rules');
+})->name('rules');
+
 require __DIR__.'/auth.php';

@@ -15,6 +15,9 @@
                     <x-nav-link :href="route('games.leaderboard')" :active="request()->routeIs('games.leaderboard')">
                         🏆 {{ __('Classement') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('rules')" :active="request()->routeIs('rules')">
+                        📖 {{ __('Règles du jeu') }}
+                    </x-nav-link>
                     @auth
                         <x-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')">
                             📋 {{ __('Historique') }}
@@ -92,6 +95,9 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('games.leaderboard')" :active="request()->routeIs('games.leaderboard')">
                 🏆 {{ __('Classement') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('rules')" :active="request()->routeIs('rules')">
+                📖 {{ __('Règles du jeu') }}
             </x-responsive-nav-link>
             @auth
                 <x-responsive-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')">
