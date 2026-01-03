@@ -19,6 +19,9 @@
                         📖 {{ __('Règles du jeu') }}
                     </x-nav-link>
                     @auth
+                        <x-nav-link :href="route('games.stats')" :active="request()->routeIs('games.stats')">
+                            📊 {{ __('Mes Stats') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')">
                             📋 {{ __('Historique') }}
                         </x-nav-link>
@@ -100,6 +103,9 @@
                 📖 {{ __('Règles du jeu') }}
             </x-responsive-nav-link>
             @auth
+                <x-responsive-nav-link :href="route('games.stats')" :active="request()->routeIs('games.stats')">
+                    📊 {{ __('Mes Stats') }}
+                </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('games.index')" :active="request()->routeIs('games.index')">
                     📋 {{ __('Historique') }}
                 </x-responsive-nav-link>

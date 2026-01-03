@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/games/create', [GameController::class, 'create'])->name('games.create');
     Route::post('/games', [GameController::class, 'store'])->name('games.store');
     Route::get('/games/{game}', [GameController::class, 'show'])->name('games.show');
+    Route::get('/games/{game}/edit', [GameController::class, 'edit'])->name('games.edit');
+    Route::put('/games/{game}', [GameController::class, 'update'])->name('games.update');
+    
+    // Route pour les statistiques personnelles
+    Route::get('/stats', [GameController::class, 'stats'])->name('games.stats');
     
     // Routes admin pour la gestion des utilisateurs
     Route::prefix('admin')->name('admin.')->group(function () {

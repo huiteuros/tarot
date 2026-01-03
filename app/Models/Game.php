@@ -81,4 +81,58 @@ class Game extends Model
     {
         return $this->hasMany(GameMisere::class);
     }
+
+    /**
+     * Obtenir le nom formaté du contrat
+     */
+    public function getContractTypeName(): string
+    {
+        return match($this->contract_type) {
+            'petite' => 'Petite',
+            'garde' => 'Garde',
+            'garde_sans' => 'Garde Sans',
+            'garde_contre' => 'Garde Contre',
+            default => ucfirst($this->contract_type),
+        };
+    }
+
+    /**
+     * Vérifier si le contrat a été réussi
+     */
+    public function isSuccessful(): bool
+    {
+        return $this->contract_success;
+    }
+
+    /**
+     * Obtenir tous les bonus de la partie sous forme de tableau
+     */
+    public function getBonusArray(): array
+    {
+        return [
+            'petit_au_bout' => $this->petit_au_bout,
+            'petit_au_bout_team' => $this->petit_au_bout_team,
+            'poignee' => $this->poignee,
+            'poignee_team' => $this->poignee_team,
+            'chelem' => $this->chelem,
+        ];
+    }
+
+    /**
+     * Scope pour les parties récentes
+     */
+    public function scopeRecent($query, int $days = 30)
+    {
+        return $query->where('played_at', '>=', now()->subDays($days));
+    }
+
+    /**
+     * Scope pour les parties d'un joueur
+     */
+    public function scopeForPlayer($query, int $userId)
+    {
+        return $query->whereHas('gamePlayers', function($q) use ($userId) {
+            $q->where('user_id', $userId);
+        });
+    }
 }

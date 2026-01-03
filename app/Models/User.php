@@ -68,4 +68,57 @@ class User extends Authenticatable
     {
         return $this->hasMany(GamePlayer::class);
     }
+
+    /**
+     * Obtenir le rang ELO du joueur
+     */
+    public function getEloRank(): int
+    {
+        return static::where('games_played', '>', 0)
+            ->where('elo', '>', $this->elo)
+            ->count() + 1;
+    }
+
+    /**
+     * Obtenir le taux de victoire du joueur
+     */
+    public function getWinRate(): float
+    {
+        if ($this->games_played === 0) {
+            return 0.0;
+        }
+
+        $wins = $this->gamePlayers()
+            ->join('games', 'game_players.game_id', '=', 'games.id')
+            ->where(function($query) {
+                $query->where(function($q) {
+                    // Victoire en tant que preneur ou attaquant
+                    $q->whereIn('game_players.role', ['preneur', 'attaquant'])
+                      ->where('games.contract_success', true);
+                })->orWhere(function($q) {
+                    // Victoire en tant que défenseur
+                    $q->where('game_players.role', 'defenseur')
+                      ->where('games.contract_success', false);
+                });
+            })
+            ->count();
+
+        return round(($wins / $this->games_played) * 100, 1);
+    }
+
+    /**
+     * Scope pour les joueurs actifs
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('games_played', '>', 0);
+    }
+
+    /**
+     * Scope pour le classement
+     */
+    public function scopeLeaderboard($query)
+    {
+        return $query->active()->orderBy('elo', 'desc');
+    }
 }

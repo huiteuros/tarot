@@ -98,9 +98,14 @@
                                             </div>
                                         </div>
 
-                                        <a href="{{ route('games.show', $game) }}" class="ml-4 text-indigo-600 hover:text-indigo-800">
-                                            Détails →
-                                        </a>
+                                        <div class="flex gap-3">
+                                            <a href="{{ route('games.edit', $game) }}" class="text-indigo-600 hover:text-indigo-800">
+                                                ✏️ Modifier
+                                            </a>
+                                            <a href="{{ route('games.show', $game) }}" class="text-indigo-600 hover:text-indigo-800">
+                                                Détails →
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
