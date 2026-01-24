@@ -96,6 +96,16 @@ class GameRepository
     }
 
     /**
+     * Récupérer la dernière partie jouée
+     */
+    public function getLatestGame(): ?Game
+    {
+        return Game::orderBy('played_at', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+    }
+
+    /**
      * Récupérer les joueurs d'une partie
      */
     public function getGamePlayers(Game $game): Collection

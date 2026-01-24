@@ -24,8 +24,9 @@ class GameController extends Controller
     public function index()
     {
         $games = $this->gameRepository->getPaginated(20);
+        $latestGame = $this->gameRepository->getLatestGame();
 
-        return view('games.index', compact('games'));
+        return view('games.index', compact('games', 'latestGame'));
     }
 
     /**
@@ -77,7 +78,11 @@ class GameController extends Controller
         // Récupérer les IDs des joueurs pour le bouton "Rejouer"
         $playerIds = $this->gameService->getPlayerIds($game);
         
-        return view('games.show', compact('game', 'playerIds'));
+        // Vérifier si c'est la dernière partie
+        $latestGame = $this->gameRepository->getLatestGame();
+        $isLatestGame = $latestGame && $game->id === $latestGame->id;
+        
+        return view('games.show', compact('game', 'playerIds', 'isLatestGame'));
     }
 
     /**
@@ -85,6 +90,15 @@ class GameController extends Controller
      */
     public function edit(Game $game)
     {
+        // Vérifier que c'est bien la dernière partie
+        $latestGame = $this->gameRepository->getLatestGame();
+        
+        if (!$latestGame || $game->id !== $latestGame->id) {
+            return redirect()
+                ->route('games.index')
+                ->with('error', 'Seule la dernière partie jouée peut être modifiée.');
+        }
+        
         $game = $this->gameRepository->findWithRelations($game->id);
         $users = $this->gameRepository->getAllUsers();
         

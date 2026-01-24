@@ -99,9 +99,11 @@
                                         </div>
 
                                         <div class="flex gap-3">
-                                            <a href="{{ route('games.edit', $game) }}" class="text-indigo-600 hover:text-indigo-800">
-                                                ✏️ Modifier
-                                            </a>
+                                            @if($latestGame && $game->id === $latestGame->id)
+                                                <a href="{{ route('games.edit', $game) }}" class="text-indigo-600 hover:text-indigo-800">
+                                                    ✏️ Modifier
+                                                </a>
+                                            @endif
                                             <a href="{{ route('games.show', $game) }}" class="text-indigo-600 hover:text-indigo-800">
                                                 Détails →
                                             </a>
