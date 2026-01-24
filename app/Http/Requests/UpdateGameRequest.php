@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Game;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateGameRequest extends FormRequest
@@ -11,7 +12,22 @@ class UpdateGameRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // Récupérer la partie en cours de modification
+        $game = $this->route('game');
+        
+        // Récupérer la dernière partie jouée
+        $latestGame = Game::orderBy('played_at', 'desc')->orderBy('id', 'desc')->first();
+        
+        // Autoriser seulement si c'est la dernière partie
+        return $latestGame && $game->id === $latestGame->id;
+    }
+
+    /**
+     * Obtenir le message d'erreur d'autorisation personnalisé
+     */
+    protected function failedAuthorization()
+    {
+        abort(403, 'Seule la dernière partie jouée peut être modifiée.');
     }
 
     /**
