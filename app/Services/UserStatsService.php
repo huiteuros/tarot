@@ -20,6 +20,7 @@ class UserStatsService
             ->select(
                 'games.id',
                 'games.played_at',
+                'games.contract_type',
                 'games.contract_success',
                 'games.points',
                 'games.oudlers',
@@ -38,6 +39,11 @@ class UserStatsService
         $avgOudlers = $this->getAverageOudlers($gamePlayers);
         $avgPoints = $this->getAveragePoints($gamePlayers);
         $preneurWinRate = $this->getPreneurWinRate($gamePlayers);
+        $peakElo = $this->getPeakElo($gamePlayers, $user);
+        $statsByContract = $this->getStatsByContractType($gamePlayers);
+        $bestWin = $this->getBestWin($gamePlayers);
+        $worstDefeat = $this->getWorstDefeat($gamePlayers);
+        $timesCalled = $this->getTimesCalled($gamePlayers);
         $partnerStats = $this->getPartnerStats($user, $gamePlayers);
         $bestPartner = !empty($partnerStats) ? $partnerStats[0] : null;
 
@@ -46,9 +52,14 @@ class UserStatsService
             'totalGames',
             'winRate',
             'timesTaken',
+            'timesCalled',
             'avgOudlers',
             'avgPoints',
             'preneurWinRate',
+            'peakElo',
+            'statsByContract',
+            'bestWin',
+            'worstDefeat',
             'bestPartner',
             'partnerStats'
         );
@@ -133,6 +144,96 @@ class UserStatsService
         return $preneurGames->count() > 0 
             ? round(($preneurWins / $preneurGames->count()) * 100, 1) 
             : 0.0;
+    }
+
+    /**
+     * Obtenir le nombre de fois où le joueur a été appelé (attaquant)
+     */
+    private function getTimesCalled($gamePlayers): int
+    {
+        return $gamePlayers->where('role', 'attaquant')->count();
+    }
+
+    /**
+     * Obtenir la meilleure victoire (score le plus élevé positif)
+     */
+    private function getBestWin($gamePlayers): ?int
+    {
+        $positiveScores = $gamePlayers->where('score', '>', 0);
+
+        return $positiveScores->isNotEmpty() ? (int) $positiveScores->max('score') : null;
+    }
+
+    /**
+     * Obtenir la plus grosse défaite (score le plus négatif)
+     */
+    private function getWorstDefeat($gamePlayers): ?int
+    {
+        $negativeScores = $gamePlayers->where('score', '<', 0);
+
+        return $negativeScores->isNotEmpty() ? (int) $negativeScores->min('score') : null;
+    }
+
+    /**
+     * Obtenir le meilleur ELO atteint par le joueur
+     */
+    private function getPeakElo($gamePlayers, User $user): int
+    {
+        if ($gamePlayers->isEmpty()) {
+            return $user->elo;
+        }
+
+        $maxEloAfter = $gamePlayers->max('elo_after');
+        $maxEloBefore = $gamePlayers->max('elo_before');
+
+        return (int) max($maxEloAfter, $maxEloBefore, $user->elo);
+    }
+
+    /**
+     * Obtenir les statistiques par type de contrat en tant que preneur
+     */
+    private function getStatsByContractType($gamePlayers): array
+    {
+        $contractTypes = ['petite', 'garde', 'garde_sans', 'garde_contre'];
+        $contractLabels = [
+            'petite' => 'Petite',
+            'garde' => 'Garde',
+            'garde_sans' => 'Garde Sans',
+            'garde_contre' => 'Garde Contre',
+        ];
+
+        $preneurGames = $gamePlayers->where('role', 'preneur');
+        $stats = [];
+
+        foreach ($contractTypes as $type) {
+            $gamesOfType = $preneurGames->where('contract_type', $type);
+            $count = $gamesOfType->count();
+
+            if ($count === 0) {
+                $stats[$type] = [
+                    'label' => $contractLabels[$type],
+                    'count' => 0,
+                    'wins' => 0,
+                    'winRate' => 0.0,
+                    'avgPoints' => 0.0,
+                    'avgOudlers' => 0.0,
+                ];
+                continue;
+            }
+
+            $wins = $gamesOfType->where('contract_success', true)->count();
+
+            $stats[$type] = [
+                'label' => $contractLabels[$type],
+                'count' => $count,
+                'wins' => $wins,
+                'winRate' => round(($wins / $count) * 100, 1),
+                'avgPoints' => round($gamesOfType->avg('points'), 1),
+                'avgOudlers' => round($gamesOfType->avg('oudlers'), 2),
+            ];
+        }
+
+        return $stats;
     }
 
     /**

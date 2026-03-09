@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreGameRequest;
 use App\Http\Requests\UpdateGameRequest;
 use App\Models\Game;
+use App\Models\User;
 use App\Repositories\GameRepository;
 use App\Services\GameService;
 use App\Services\UserStatsService;
@@ -142,7 +143,18 @@ class GameController extends Controller
         $user = auth()->user();
         $stats = $this->userStatsService->getUserStats($user);
 
-        return view('games.stats', array_merge(['user' => $user], $stats));
+        return view('games.stats', array_merge(['user' => $user, 'isOwnProfile' => true], $stats));
+    }
+
+    /**
+     * Afficher les statistiques d'un joueur donné (route publique)
+     */
+    public function userStats(User $user)
+    {
+        $stats = $this->userStatsService->getUserStats($user);
+        $isOwnProfile = auth()->check() && auth()->id() === $user->id;
+
+        return view('games.stats', array_merge(['user' => $user, 'isOwnProfile' => $isOwnProfile], $stats));
     }
 }
 

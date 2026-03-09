@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
 // Route publique pour le classement
 Route::get('/leaderboard', [GameController::class, 'leaderboard'])->name('games.leaderboard');
 
+// Route publique pour les stats d'un joueur
+Route::get('/stats/{user}', [GameController::class, 'userStats'])->name('games.user-stats');
+
 // Route publique pour les règles du jeu
 Route::get('/regles', function () {
     return view('rules');
